@@ -59,6 +59,12 @@ variable "key_vault_id" {
   default     = null
 }
 
+variable "log_analytics_workspace_id" {
+  description = "Log Analytics Workspace ID for diagnostic settings"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Resource tags"
   type        = map(string)

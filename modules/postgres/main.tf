@@ -41,3 +41,19 @@ resource "azurerm_key_vault_secret" "psql_connection_string" {
   value        = "postgresql://${var.administrator_login}:${random_password.admin_password.result}@${azurerm_postgresql_flexible_server.psql.fqdn}:5432/${var.database_name}?sslmode=require"
   key_vault_id = var.key_vault_id
 }
+
+# Diagnostic setting to stream PostgreSQL logs and metrics to Log Analytics Workspace
+resource "azurerm_monitor_diagnostic_setting" "psql_diag" {
+  count                      = var.log_analytics_workspace_id != null ? 1 : 0
+  name                       = "diag-${var.name}"
+  target_resource_id         = azurerm_postgresql_flexible_server.psql.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  enabled_log {
+    category_group = "allLogs"
+  }
+
+  enabled_metric {
+    category = "AllMetrics"
+  }
+}

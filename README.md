@@ -3,13 +3,21 @@
 Creates:
 - **Networking**: VNet + 4 subnets (`aca`, `psql`, `pep`, `mgmt`) + NSGs
 - **Private DNS**: 6 private DNS zones linked to VNet (`blob`, `servicebus`, `keyvault`, `acr`, `openai`, `postgres`)
-- **Identity**: 6 user-assigned managed identities (`submission-api`, `core`, `identity`, `intel-api`, `intel-worker`, `audit`)
-- **Monitoring**: Log Analytics Workspace + Application Insights
-- **Key Vault**: Azure Key Vault with Private Endpoint (`pep`) & RBAC authorization
-- **Storage**: Azure Storage Account (Blob) with Private Endpoint (`pep`)
-- **ACR**: Azure Container Registry
-- **Service Bus**: Azure Service Bus Namespace
-- **PostgreSQL**: Azure Database for PostgreSQL Flexible Server in delegated subnet `snet-psql` (credentials stored in Key Vault)
+- **Identity & Least-Privilege RBAC**:
+  - 6 user-assigned managed identities (`submission-api`, `core`, `identity`, `intel-api`, `intel-worker`, `audit`)
+  - `AcrPull` on ACR for all 6 microservices
+  - `Key Vault Secrets User` on Key Vault for all 6 microservices
+  - `Storage Blob Data Contributor` for `submission-api` and `intel-worker`
+  - `Azure Service Bus Data Sender` for `submission-api`, `core`, `intel-api`
+  - `Azure Service Bus Data Receiver` for `intel-worker` and `audit`
+- **Security & Data Isolation**:
+  - Key Vault: Public network access disabled (`default_action = Deny`), private endpoint in `snet-pep`
+  - Storage Account: Public network access disabled (`default_action = Deny`), blob private endpoint in `snet-pep`
+  - ACR: Admin password disabled (`admin_enabled = false`), authenticates strictly via Managed Identities
+  - PostgreSQL: Flexible Server in delegated subnet `snet-psql` with private DNS; admin credentials and connection string auto-saved to Key Vault
+- **Unified Observability**:
+  - Log Analytics Workspace + Application Insights
+  - Diagnostic settings configured for Key Vault, Storage, PostgreSQL, Service Bus, and ACR streaming all logs & metrics to Log Analytics
 - **Container Apps Environment**: Internal VNet Container Apps Environment (`cae`) in delegated subnet `snet-aca`
 
 ## Prerequisites

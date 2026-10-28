@@ -12,3 +12,8 @@ postgres_sku     = "B_Standard_B1ms"
 postgres_version = "16"
 postgres_db_name = "nextamp_db"
 keyvault_sku     = "standard"
+
+# Security & Network Isolation
+acr_admin_enabled             = false
+public_network_access_enabled = false
+# allowed_ip_addresses        = ["<your-deployer-public-ip>/32"] # uncomment if needed during deploy
