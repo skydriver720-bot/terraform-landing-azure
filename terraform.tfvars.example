@@ -1,0 +1,14 @@
+subscription_id     = "00000000-0000-0000-0000-000000000000"
+resource_group_name = "rg-nextamp-sia-dev-v2"
+project             = "nextamp"
+environment         = "dev"
+region_code         = "wus2"
+instance            = "001"
+
+# SKUs
+acr_sku          = "Standard"
+servicebus_sku   = "Standard"
+postgres_sku     = "B_Standard_B1ms"
+postgres_version = "16"
+postgres_db_name = "nextamp_db"
+keyvault_sku     = "standard"
